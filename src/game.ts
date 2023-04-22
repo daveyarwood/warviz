@@ -131,6 +131,42 @@ export function iterateGame(game: Game): Game {
     return game;
   }
 
+  if (game.player1.cardsInPlay.length == 0) {
+    game.player1 = drawCard(game.player1);
+    game.player2 = drawCard(game.player2);
+    return { ...game };
+  }
+
+  const outcome = roundOutcome(game);
+  switch (outcome) {
+    case RoundOutcome.War:
+      // Recognize the special case where one of the players is out of cards. In
+      // that scenario, the player gives their cards to the other player and
+      // they will lose at the beginning of the next iteration.
+      if (game.player1.cardsInHand.length == 0) {
+        game = transferCardsToPlayer2(game);
+      } else if (game.player2.cardsInHand.length == 0) {
+        game = transferCardsToPlayer1(game);
+      } else {
+        game.player1 = drawCard(drawCard(drawCard(game.player1)));
+        game.player2 = drawCard(drawCard(drawCard(game.player2)));
+      }
+      break;
+
+    case RoundOutcome.Player1Won:
+      game = transferCardsToPlayer1(game);
+      break;
+
+    case RoundOutcome.Player2Won:
+      game = transferCardsToPlayer2(game);
+      break;
+
+    default:
+      // This should only happen if `roundOutcome` produced null, which should
+      // never happen.
+      throw new Error(`Unexpected round outcome: ${outcome}`);
+  }
+
   if (
     game.player1.cardsInHand.length == 0 &&
     game.player1.cardsInPlay.length == 0
@@ -147,39 +183,5 @@ export function iterateGame(game: Game): Game {
     return { ...game };
   }
 
-  if (game.player1.cardsInPlay.length == 0) {
-    game.player1 = drawCard(game.player1);
-    game.player2 = drawCard(game.player2);
-    return { ...game };
-  }
-
-  const outcome = roundOutcome(game);
-  switch (outcome) {
-    case RoundOutcome.War:
-      // Recognize the special case where one of the players is out of cards. In
-      // that scenario, the player gives their cards to the other player and
-      // they will lose at the beginning of the next iteration.
-      if (game.player1.cardsInHand.length == 0) {
-        return transferCardsToPlayer2(game);
-      }
-      if (game.player2.cardsInHand.length == 0) {
-        return transferCardsToPlayer1(game);
-      }
-
-      game.player1 = drawCard(drawCard(drawCard(game.player1)));
-      game.player2 = drawCard(drawCard(drawCard(game.player2)));
-
-      return { ...game };
-
-    case RoundOutcome.Player1Won:
-      return transferCardsToPlayer1(game);
-
-    case RoundOutcome.Player2Won:
-      return transferCardsToPlayer2(game);
-
-    default:
-      // This should only happen if `roundOutcome` produced null, which should
-      // never happen.
-      throw new Error(`Unexpected round outcome: ${outcome}`);
-  }
+  return { ...game };
 }

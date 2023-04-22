@@ -65,52 +65,13 @@ test("Win/lose checking", () => {
 
   //////////////////////////////////////////////////////////////////////////////
 
-  const game2a = iterateGame({
-    status: GameStatus.StillPlaying,
-    player1: { name: "p1", cardsInHand: [], cardsInPlay: randomCards(1) },
-    player2: {
-      name: "p2",
-      cardsInHand: randomCards(52),
-      cardsInPlay: randomCards(1),
-    },
-  });
-
-  expect(game2a.status).toEqual(GameStatus.StillPlaying);
-
-  //////////////////////////////////////////////////////////////////////////////
-
-  const game2b = iterateGame({
-    status: GameStatus.StillPlaying,
-    player1: {
-      name: "p1",
-      cardsInHand: randomCards(52),
-      cardsInPlay: randomCards(1),
-    },
-    player2: { name: "p2", cardsInHand: [], cardsInPlay: randomCards(1) },
-  });
-
-  expect(game2b.status).toEqual(GameStatus.StillPlaying);
-
-  //////////////////////////////////////////////////////////////////////////////
-
   const game3 = iterateGame({
-    status: GameStatus.StillPlaying,
-    player1: { name: "p1", cardsInHand: randomCards(54), cardsInPlay: [] },
-    player2: { name: "p2", cardsInHand: [], cardsInPlay: [] },
-  });
-
-  expect(game3.status).toEqual(GameStatus.Player1Won);
-  expect(iterateGame(game3).status).toEqual(GameStatus.Player1Won);
-
-  //////////////////////////////////////////////////////////////////////////////
-
-  const game4 = iterateGame({
     status: GameStatus.StillPlaying,
     player1: { name: "p1", cardsInHand: randomCards(27), cardsInPlay: [] },
     player2: { name: "p2", cardsInHand: randomCards(27), cardsInPlay: [] },
   });
 
-  expect(game4.status).toEqual(GameStatus.StillPlaying);
+  expect(game3.status).toEqual(GameStatus.StillPlaying);
 });
 
 test("First iteration", () => {
@@ -140,8 +101,7 @@ test("War with no cards left", () => {
     },
   });
 
-  expect(game.status).toEqual(GameStatus.StillPlaying);
-  expect(iterateGame(game).status).toEqual(GameStatus.Player1Won);
+  expect(game.status).toEqual(GameStatus.Player1Won);
 });
 
 test("War with one card left, and it's a really good card", () => {

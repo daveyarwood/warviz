@@ -46,8 +46,6 @@ function War() {
 
   return (
     <div>
-      <p>{JSON.stringify(game, null, 2)}</p>
-
       <GameDisplay status={game.status} />
       <PlayerDisplay player={game.player1} />
       <PlayerDisplay player={game.player2} />
