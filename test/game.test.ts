@@ -24,8 +24,8 @@ test("Win/lose checking", () => {
   // check of the win/lose checking logic.
   const game1 = iterateGame({
     status: GameStatus.StillPlaying,
-    player1: { cardsInHand: [], cardsInPlay: [] },
-    player2: { cardsInHand: randomCards(54), cardsInPlay: [] },
+    player1: { name: "p1", cardsInHand: [], cardsInPlay: [] },
+    player2: { name: "p2", cardsInHand: randomCards(54), cardsInPlay: [] },
   });
 
   expect(game1.status).toEqual(GameStatus.Player2Won);
@@ -33,8 +33,8 @@ test("Win/lose checking", () => {
 
   const game2 = iterateGame({
     status: GameStatus.StillPlaying,
-    player1: { cardsInHand: randomCards(54), cardsInPlay: [] },
-    player2: { cardsInHand: [], cardsInPlay: [] },
+    player1: { name: "p1", cardsInHand: randomCards(54), cardsInPlay: [] },
+    player2: { name: "p2", cardsInHand: [], cardsInPlay: [] },
   });
 
   expect(game2.status).toEqual(GameStatus.Player1Won);
@@ -42,8 +42,8 @@ test("Win/lose checking", () => {
 
   const game3 = iterateGame({
     status: GameStatus.StillPlaying,
-    player1: { cardsInHand: randomCards(27), cardsInPlay: [] },
-    player2: { cardsInHand: randomCards(27), cardsInPlay: [] },
+    player1: { name: "p1", cardsInHand: randomCards(27), cardsInPlay: [] },
+    player2: { name: "p2", cardsInHand: randomCards(27), cardsInPlay: [] },
   });
 
   expect(game3.status).toEqual(GameStatus.StillPlaying);

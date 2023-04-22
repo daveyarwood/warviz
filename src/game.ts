@@ -1,7 +1,8 @@
 import { standardDeck, Card } from "./deck";
 import { shuffle } from "./shuffle";
 
-interface Player {
+export interface Player {
+  name: string;
   cardsInHand: Card[];
   cardsInPlay: Card[];
 }
@@ -12,14 +13,26 @@ export enum GameStatus {
   Player2Won,
 }
 
+export function gameStatusString(status: GameStatus): string {
+  switch (status) {
+    case GameStatus.StillPlaying:
+      return "still playing";
+    case GameStatus.Player1Won:
+      return "player 1 won";
+    case GameStatus.Player2Won:
+      return "player 2 won";
+  }
+}
+
 export interface Game {
   player1: Player;
   player2: Player;
   status: GameStatus;
 }
 
-function initialPlayer(initialHand: Card[]): Player {
+function initialPlayer(name: string, initialHand: Card[]): Player {
   return {
+    name: name,
     cardsInHand: initialHand,
     cardsInPlay: [],
   };
@@ -30,8 +43,8 @@ export function initialGame(): Game {
 
   return {
     status: GameStatus.StillPlaying,
-    player1: initialPlayer(deck.slice(0, 27)),
-    player2: initialPlayer(deck.slice(27, 54)),
+    player1: initialPlayer("Dave", deck.slice(0, 27)),
+    player2: initialPlayer("Mah", deck.slice(27, 54)),
   };
 }
 
