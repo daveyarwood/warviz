@@ -7,7 +7,8 @@ import {
   iterateGame,
   GameStatus,
   Player,
-  Game,
+  roundOutcome,
+  roundOutcomeString,
 } from "./game";
 
 interface GameDisplayProps {
@@ -27,12 +28,13 @@ function GameDisplay(props: GameDisplayProps) {
 }
 
 function PlayerDisplay(props: PlayerDisplayProps) {
-  const cards = props.player.cardsInPlay;
-  const cardsList = cards.map(cardToText);
+  const cardsInPlay = props.player.cardsInPlay;
+  const cardsInHand = props.player.cardsInHand;
 
   return (
     <div>
-      <strong>{props.player.name}</strong>: {JSON.stringify(cardsList)}
+      <strong>{props.player.name}</strong> ({cardsInHand.length}):
+      {JSON.stringify(cardsInPlay.map(cardToText))}
     </div>
   );
 }
@@ -40,12 +42,20 @@ function PlayerDisplay(props: PlayerDisplayProps) {
 function War() {
   const [game, setGame] = useState(initialGame());
 
+  const outcome = roundOutcome(game);
+
   return (
     <div>
+      <p>{JSON.stringify(game, null, 2)}</p>
+
       <GameDisplay status={game.status} />
       <PlayerDisplay player={game.player1} />
       <PlayerDisplay player={game.player2} />
+      <br />
+      {outcome != null ? `Round outcome: ${roundOutcomeString(outcome)}` : ""}
+      <br />
       <button onClick={() => setGame(iterateGame(game))}>Advance game</button>
+      <button onClick={() => setGame(initialGame())}>Reset game</button>
     </div>
   );
 }

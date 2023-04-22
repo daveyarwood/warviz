@@ -48,36 +48,138 @@ export function initialGame(): Game {
   };
 }
 
+export enum RoundOutcome {
+  Player1Won,
+  Player2Won,
+  War,
+}
+
+export function roundOutcome(game: Game): RoundOutcome | null {
+  const cards1 = game.player1.cardsInPlay;
+  const cards2 = game.player2.cardsInPlay;
+
+  const maybeCard1 = cards1[cards1.length - 1];
+  const maybeCard2 = cards2[cards2.length - 1];
+
+  if (maybeCard1 == null || maybeCard2 == null) {
+    return null;
+  }
+
+  const card1 = maybeCard1!;
+  const card2 = maybeCard2!;
+
+  if (card1.rank == card2.rank) {
+    return RoundOutcome.War;
+  }
+
+  if (card1.rank > card2.rank) {
+    return RoundOutcome.Player1Won;
+  }
+
+  return RoundOutcome.Player2Won;
+}
+
+export function roundOutcomeString(outcome: RoundOutcome): string {
+  switch (outcome) {
+    case RoundOutcome.War:
+      return "WAR!";
+    case RoundOutcome.Player1Won:
+      return "Player 1 wins";
+    case RoundOutcome.Player2Won:
+      return "Player 2 wins";
+  }
+}
+
+[];
+
+function drawCard(player: Player): Player {
+  const card: Card | undefined = player.cardsInHand.shift();
+  if (card) {
+    player.cardsInPlay.push(card);
+  }
+  return player;
+}
+
+function transferCardsToPlayer1(game: Game): Game {
+  game.player1.cardsInHand = [
+    ...game.player1.cardsInHand,
+    ...game.player1.cardsInPlay,
+    ...game.player2.cardsInPlay,
+  ];
+
+  game.player1.cardsInPlay = [];
+  game.player2.cardsInPlay = [];
+
+  return { ...game };
+}
+
+function transferCardsToPlayer2(game: Game): Game {
+  game.player2.cardsInHand = [
+    ...game.player2.cardsInHand,
+    ...game.player2.cardsInPlay,
+    ...game.player1.cardsInPlay,
+  ];
+
+  game.player1.cardsInPlay = [];
+  game.player2.cardsInPlay = [];
+
+  return { ...game };
+}
+
 export function iterateGame(game: Game): Game {
   if (game.status != GameStatus.StillPlaying) {
     return game;
   }
 
-  if (game.player1.cardsInHand.length == 0) {
+  if (
+    game.player1.cardsInHand.length == 0 &&
+    game.player1.cardsInPlay.length == 0
+  ) {
     game.status = GameStatus.Player2Won;
-    return game;
+    return { ...game };
   }
 
-  if (game.player2.cardsInHand.length == 0) {
+  if (
+    game.player2.cardsInHand.length == 0 &&
+    game.player2.cardsInPlay.length == 0
+  ) {
     game.status = GameStatus.Player1Won;
-    return game;
+    return { ...game };
   }
 
   if (game.player1.cardsInPlay.length == 0) {
-    const card1: Card = game.player1.cardsInHand.shift()!;
-    game.player1.cardsInPlay.push(card1);
-
-    const card2: Card = game.player2.cardsInHand.shift()!;
-    game.player2.cardsInPlay.push(card2);
-
-    return game;
+    game.player1 = drawCard(game.player1);
+    game.player2 = drawCard(game.player2);
+    return { ...game };
   }
 
-  // TODO:
-  // * if one player is out of cards, then the other player wins
-  // * get a card from player1 deck and player2 deck
-  // * compare them. winner gets both cards at the end of their deck
-  // * figure out how to handle war
+  const outcome = roundOutcome(game);
+  switch (outcome) {
+    case RoundOutcome.War:
+      // Recognize the special case where one of the players is out of cards. In
+      // that scenario, the player gives their cards to the other player and
+      // they will lose at the beginning of the next iteration.
+      if (game.player1.cardsInHand.length == 0) {
+        return transferCardsToPlayer2(game);
+      }
+      if (game.player2.cardsInHand.length == 0) {
+        return transferCardsToPlayer1(game);
+      }
 
-  return game;
+      game.player1 = drawCard(drawCard(drawCard(game.player1)));
+      game.player2 = drawCard(drawCard(drawCard(game.player2)));
+
+      return { ...game };
+
+    case RoundOutcome.Player1Won:
+      return transferCardsToPlayer1(game);
+
+    case RoundOutcome.Player2Won:
+      return transferCardsToPlayer2(game);
+
+    default:
+      // This should only happen if `roundOutcome` produced null, which should
+      // never happen.
+      throw new Error(`Unexpected round outcome: ${outcome}`);
+  }
 }

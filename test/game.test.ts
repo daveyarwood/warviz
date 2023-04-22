@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { Card, standardDeck } from "../src/deck";
+import { Rank, Suit, Card, standardDeck } from "../src/deck";
 import { GameStatus, initialGame, iterateGame } from "../src/game";
 import { shuffle } from "../src/shuffle";
 
@@ -19,34 +19,98 @@ function randomCards(amount: number): Card[] {
 }
 
 test("Win/lose checking", () => {
-  // Note: This is slightly unrealistic in that the game wouldn't be in this
-  // state without the status already _being_ Player2Won. But it's a good basic
-  // check of the win/lose checking logic.
-  const game1 = iterateGame({
+  const game1a = iterateGame({
     status: GameStatus.StillPlaying,
-    player1: { name: "p1", cardsInHand: [], cardsInPlay: [] },
-    player2: { name: "p2", cardsInHand: randomCards(54), cardsInPlay: [] },
+    player1: {
+      name: "p1",
+      cardsInHand: [
+        { rank: Rank.King, suit: Suit.Heart },
+        { rank: Rank.Queen, suit: Suit.Heart },
+      ],
+      cardsInPlay: [{ rank: Rank.Ten, suit: Suit.Heart }],
+    },
+    player2: {
+      name: "p2",
+      cardsInHand: [],
+      cardsInPlay: [{ rank: Rank.Nine, suit: Suit.Heart }],
+    },
   });
 
-  expect(game1.status).toEqual(GameStatus.Player2Won);
-  expect(iterateGame(game1).status).toEqual(GameStatus.Player2Won);
+  const gameAfterIteration1a = iterateGame(game1a);
+  expect(gameAfterIteration1a.status).toEqual(GameStatus.Player1Won);
+  expect(gameAfterIteration1a.player1.cardsInHand.length).toEqual(4);
+  expect(gameAfterIteration1a.player2.cardsInHand.length).toEqual(0);
 
-  const game2 = iterateGame({
+  const game1b = iterateGame({
+    status: GameStatus.StillPlaying,
+    player1: {
+      name: "p1",
+      cardsInHand: [],
+      cardsInPlay: [{ rank: Rank.Nine, suit: Suit.Heart }],
+    },
+    player2: {
+      name: "p2",
+      cardsInHand: [
+        { rank: Rank.King, suit: Suit.Heart },
+        { rank: Rank.Queen, suit: Suit.Heart },
+      ],
+      cardsInPlay: [{ rank: Rank.Ten, suit: Suit.Heart }],
+    },
+  });
+
+  const gameAfterIteration1b = iterateGame(game1b);
+  expect(gameAfterIteration1b.status).toEqual(GameStatus.Player2Won);
+  expect(gameAfterIteration1b.player2.cardsInHand.length).toEqual(4);
+  expect(gameAfterIteration1b.player1.cardsInHand.length).toEqual(0);
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  const game2a = iterateGame({
+    status: GameStatus.StillPlaying,
+    player1: { name: "p1", cardsInHand: [], cardsInPlay: randomCards(1) },
+    player2: {
+      name: "p2",
+      cardsInHand: randomCards(52),
+      cardsInPlay: randomCards(1),
+    },
+  });
+
+  expect(game2a.status).toEqual(GameStatus.StillPlaying);
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  const game2b = iterateGame({
+    status: GameStatus.StillPlaying,
+    player1: {
+      name: "p1",
+      cardsInHand: randomCards(52),
+      cardsInPlay: randomCards(1),
+    },
+    player2: { name: "p2", cardsInHand: [], cardsInPlay: randomCards(1) },
+  });
+
+  expect(game2b.status).toEqual(GameStatus.StillPlaying);
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  const game3 = iterateGame({
     status: GameStatus.StillPlaying,
     player1: { name: "p1", cardsInHand: randomCards(54), cardsInPlay: [] },
     player2: { name: "p2", cardsInHand: [], cardsInPlay: [] },
   });
 
-  expect(game2.status).toEqual(GameStatus.Player1Won);
-  expect(iterateGame(game2).status).toEqual(GameStatus.Player1Won);
+  expect(game3.status).toEqual(GameStatus.Player1Won);
+  expect(iterateGame(game3).status).toEqual(GameStatus.Player1Won);
 
-  const game3 = iterateGame({
+  //////////////////////////////////////////////////////////////////////////////
+
+  const game4 = iterateGame({
     status: GameStatus.StillPlaying,
     player1: { name: "p1", cardsInHand: randomCards(27), cardsInPlay: [] },
     player2: { name: "p2", cardsInHand: randomCards(27), cardsInPlay: [] },
   });
 
-  expect(game3.status).toEqual(GameStatus.StillPlaying);
+  expect(game4.status).toEqual(GameStatus.StillPlaying);
 });
 
 test("First iteration", () => {
@@ -59,4 +123,42 @@ test("First iteration", () => {
   expect(gameAfterIteration.player1.cardsInPlay.length).toEqual(1);
   expect(gameAfterIteration.player2.cardsInHand.length).toEqual(26);
   expect(gameAfterIteration.player2.cardsInPlay.length).toEqual(1);
+});
+
+test("War with no cards left", () => {
+  const game = iterateGame({
+    status: GameStatus.StillPlaying,
+    player1: {
+      name: "p1",
+      cardsInHand: randomCards(52),
+      cardsInPlay: [{ rank: Rank.Four, suit: Suit.Club }],
+    },
+    player2: {
+      name: "p2",
+      cardsInHand: [],
+      cardsInPlay: [{ rank: Rank.Four, suit: Suit.Spade }],
+    },
+  });
+
+  expect(game.status).toEqual(GameStatus.StillPlaying);
+  expect(iterateGame(game).status).toEqual(GameStatus.Player1Won);
+});
+
+test("War with one card left, and it's a really good card", () => {
+  const game = iterateGame({
+    status: GameStatus.StillPlaying,
+    player1: {
+      name: "p1",
+      cardsInHand: randomCards(52),
+      cardsInPlay: [{ rank: Rank.Four, suit: Suit.Club }],
+    },
+    player2: {
+      name: "p2",
+      cardsInHand: [{ rank: Rank.Joker, suit: Suit.Joker }],
+      cardsInPlay: [{ rank: Rank.Four, suit: Suit.Spade }],
+    },
+  });
+
+  expect(game.status).toEqual(GameStatus.StillPlaying);
+  expect(iterateGame(game).status).toEqual(GameStatus.StillPlaying);
 });
