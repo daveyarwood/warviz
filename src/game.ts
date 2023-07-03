@@ -54,19 +54,12 @@ export enum RoundOutcome {
   War,
 }
 
-export function roundOutcome(game: Game): RoundOutcome | null {
+export function roundOutcome(game: Game): RoundOutcome {
   const cards1 = game.player1.cardsInPlay;
   const cards2 = game.player2.cardsInPlay;
 
-  const maybeCard1 = cards1[cards1.length - 1];
-  const maybeCard2 = cards2[cards2.length - 1];
-
-  if (maybeCard1 == null || maybeCard2 == null) {
-    return null;
-  }
-
-  const card1 = maybeCard1!;
-  const card2 = maybeCard2!;
+  const card1 = cards1[cards1.length - 1];
+  const card2 = cards2[cards2.length - 1];
 
   if (card1.rank == card2.rank) {
     return RoundOutcome.War;
@@ -126,45 +119,65 @@ function transferCardsToPlayer2(game: Game): Game {
   return { ...game };
 }
 
+function anyCardsInPlay(game: Game): boolean {
+  return (
+    game.player1.cardsInPlay.length > 0 || game.player2.cardsInPlay.length > 0
+  );
+}
+
+function bothPlayersHaveCards(game: Game): boolean {
+  return (
+    game.player1.cardsInHand.length > 0 && game.player2.cardsInHand.length > 0
+  );
+}
+
+function bothPlayersHaveCardsInPlay(game: Game): boolean {
+  return (
+    game.player1.cardsInPlay.length > 0 && game.player2.cardsInPlay.length > 0
+  );
+}
+
 export function iterateGame(game: Game): Game {
   if (game.status != GameStatus.StillPlaying) {
     return game;
   }
 
-  if (game.player1.cardsInPlay.length == 0) {
+  if (!anyCardsInPlay(game) && bothPlayersHaveCards(game)) {
     game.player1 = drawCard(game.player1);
     game.player2 = drawCard(game.player2);
     return { ...game };
   }
 
-  const outcome = roundOutcome(game);
-  switch (outcome) {
-    case RoundOutcome.War:
-      // Recognize the special case where one of the players is out of cards. In
-      // that scenario, the player gives their cards to the other player and
-      // they will lose at the beginning of the next iteration.
-      if (game.player1.cardsInHand.length == 0) {
-        game = transferCardsToPlayer2(game);
-      } else if (game.player2.cardsInHand.length == 0) {
+  if (bothPlayersHaveCardsInPlay(game)) {
+    const outcome = roundOutcome(game);
+    switch (outcome) {
+      case RoundOutcome.War:
+        // Recognize the special case where one of the players is out of cards. In
+        // that scenario, the player gives their cards to the other player and
+        // they will lose at the beginning of the next iteration.
+        if (game.player1.cardsInHand.length == 0) {
+          game = transferCardsToPlayer2(game);
+        } else if (game.player2.cardsInHand.length == 0) {
+          game = transferCardsToPlayer1(game);
+        } else {
+          game.player1 = drawCard(drawCard(drawCard(game.player1)));
+          game.player2 = drawCard(drawCard(drawCard(game.player2)));
+        }
+        break;
+
+      case RoundOutcome.Player1Won:
         game = transferCardsToPlayer1(game);
-      } else {
-        game.player1 = drawCard(drawCard(drawCard(game.player1)));
-        game.player2 = drawCard(drawCard(drawCard(game.player2)));
-      }
-      break;
+        break;
 
-    case RoundOutcome.Player1Won:
-      game = transferCardsToPlayer1(game);
-      break;
+      case RoundOutcome.Player2Won:
+        game = transferCardsToPlayer2(game);
+        break;
 
-    case RoundOutcome.Player2Won:
-      game = transferCardsToPlayer2(game);
-      break;
-
-    default:
-      // This should only happen if `roundOutcome` produced null, which should
-      // never happen.
-      throw new Error(`Unexpected round outcome: ${outcome}`);
+      default:
+        // This should only happen if `roundOutcome` produced null, which should
+        // never happen.
+        throw new Error(`Unexpected round outcome: ${outcome}`);
+    }
   }
 
   if (

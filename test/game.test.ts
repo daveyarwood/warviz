@@ -72,6 +72,16 @@ test("Win/lose checking", () => {
   });
 
   expect(game3.status).toEqual(GameStatus.StillPlaying);
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  const game4 = iterateGame({
+    status: GameStatus.StillPlaying,
+    player1: { name: "p1", cardsInHand: randomCards(52), cardsInPlay: [] },
+    player2: { name: "p2", cardsInHand: [], cardsInPlay: [] },
+  });
+
+  expect(game4.status).toEqual(GameStatus.Player1Won);
 });
 
 test("First iteration", () => {

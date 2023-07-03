@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { cardToText } from "./deck";
+import { Game } from "./game";
 import {
   gameStatusString,
   initialGame,
@@ -44,24 +45,25 @@ const AUTOADVANCE_MS = 100;
 
 type Timer = ReturnType<typeof setInterval>;
 
+function anyCardsInPlay(game: Game): boolean {
+  return (
+    game.player1.cardsInPlay.length > 0 && game.player2.cardsInPlay.length > 0
+  );
+}
+
 function War() {
   const [game, setGame] = useState(initialGame());
   const [timer, setTimer] = useState<Timer | null>(null);
   const [autoadvance, setAutoadvance] = useState(true);
 
-  const outcome = roundOutcome(game);
+  const outcome = anyCardsInPlay(game) ? roundOutcome(game) : null;
 
   useEffect(() => {
     if (!autoadvance && timer) {
       clearInterval(timer);
       setTimer(null);
     } else if (autoadvance && !timer) {
-      setTimer(
-        setInterval(
-          () => setGame(iterateGame(game)),
-          AUTOADVANCE_MS
-        )
-      );
+      setTimer(setInterval(() => setGame(iterateGame(game)), AUTOADVANCE_MS));
     }
   }, [autoadvance]);
 
