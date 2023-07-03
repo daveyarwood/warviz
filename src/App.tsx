@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { cardToText } from "./deck";
 import {
@@ -39,10 +39,31 @@ function PlayerDisplay(props: PlayerDisplayProps) {
   );
 }
 
+// TODO: Make this a slider
+const AUTOADVANCE_MS = 100;
+
+type Timer = ReturnType<typeof setInterval>;
+
 function War() {
   const [game, setGame] = useState(initialGame());
+  const [timer, setTimer] = useState<Timer | null>(null);
+  const [autoadvance, setAutoadvance] = useState(true);
 
   const outcome = roundOutcome(game);
+
+  useEffect(() => {
+    if (!autoadvance && timer) {
+      clearInterval(timer);
+      setTimer(null);
+    } else if (autoadvance && !timer) {
+      setTimer(
+        setInterval(
+          () => setGame(iterateGame(game)),
+          AUTOADVANCE_MS
+        )
+      );
+    }
+  }, [autoadvance]);
 
   return (
     <div>
@@ -54,6 +75,15 @@ function War() {
       <br />
       <button onClick={() => setGame(iterateGame(game))}>Advance game</button>
       <button onClick={() => setGame(initialGame())}>Reset game</button>
+      <br />
+      <label>
+        <input
+          type="checkbox"
+          checked={autoadvance}
+          onChange={() => setAutoadvance(!autoadvance)}
+        />
+        Play automatically
+      </label>
     </div>
   );
 }
