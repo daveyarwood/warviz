@@ -1,0 +1,15 @@
+# warviz
+
+## Development
+
+To serve the app locally and automatically recompile whenever code changes:
+
+```bash
+yarn dev
+```
+
+To automatically run tests every time code changes:
+
+```bash
+find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
+```
