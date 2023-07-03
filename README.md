@@ -16,7 +16,7 @@ find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
 
 ## TODO
 
-* Have the game play itself (auto-advance)
+* Bugfix: Reset game button doesn't work with auto-play enabled
 * Visualize cards (using playing card emoji?)
 * Speed slider
 * Pause/play buttons
