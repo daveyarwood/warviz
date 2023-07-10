@@ -35,7 +35,11 @@ function PlayerDisplay(props: PlayerDisplayProps) {
   return (
     <div>
       <strong>{props.player.name}</strong> ({cardsInHand.length}):
-      {JSON.stringify(cardsInPlay.map(cardToText))}
+      {
+        cardsInPlay.length == 0
+        ? ""
+        : " 🫴" + cardsInPlay.map(cardToText).join("")
+      }
     </div>
   );
 }

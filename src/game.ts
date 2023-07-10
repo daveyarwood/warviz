@@ -75,7 +75,7 @@ export function roundOutcome(game: Game): RoundOutcome {
 export function roundOutcomeString(outcome: RoundOutcome): string {
   switch (outcome) {
     case RoundOutcome.War:
-      return "WAR!";
+      return "⚔️WAR!⚔️";
     case RoundOutcome.Player1Won:
       return "Player 1 wins";
     case RoundOutcome.Player2Won:
