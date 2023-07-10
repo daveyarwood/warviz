@@ -65,7 +65,7 @@ function War() {
     } else if (autoadvance && !timer) {
       setTimer(setInterval(() => setGame(iterateGame(game)), AUTOADVANCE_MS));
     }
-  }, [autoadvance]);
+  }, [autoadvance, game]);
 
   return (
     <div>
@@ -76,7 +76,13 @@ function War() {
       {outcome != null ? `Round outcome: ${roundOutcomeString(outcome)}` : ""}
       <br />
       <button onClick={() => setGame(iterateGame(game))}>Advance game</button>
-      <button onClick={() => setGame(initialGame())}>Reset game</button>
+      <button onClick={() =>
+        {
+          if (timer) clearInterval(timer);
+          setTimer(null);
+          setGame(initialGame());
+        }
+      }>Reset game</button>
       <br />
       <label>
         <input
