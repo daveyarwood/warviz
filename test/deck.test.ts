@@ -1,6 +1,11 @@
 import { expect, test } from "vitest";
-import { Rank, Suit, standardDeck } from "../src/deck";
+import { Rank, Suit, cardToText, standardDeck } from "../src/deck";
 import { shuffle } from "../src/shuffle";
+
+test("Card string representation", () => {
+  expect(cardToText({ rank: Rank.Joker, suit: Suit.Joker })).toEqual("🃏");
+  expect(cardToText({ rank: Rank.King, suit: Suit.Spade })).toEqual("🂮");
+});
 
 test("Rank order", () => {
   expect(Rank.King).toBeGreaterThan(Rank.Jack);
@@ -22,22 +27,10 @@ test("Standard deck", () => {
   const shuffled = shuffle(deck);
 
   expect(shuffled.length).toEqual(54);
-  expect(shuffled.filter((card) => card.rank == Rank.Joker).length).toEqual(
-    2
-  );
-  expect(shuffled.filter((card) => card.rank == Rank.Ace).length).toEqual(
-    4
-  );
-  expect(shuffled.filter((card) => card.suit == Suit.Heart).length).toEqual(
-    13
-  );
-  expect(shuffled.filter((card) => card.suit == Suit.Heart).length).toEqual(
-    13
-  );
-  expect(shuffled.filter((card) => card.suit == Suit.Heart).length).toEqual(
-    13
-  );
-  expect(shuffled.filter((card) => card.suit == Suit.Heart).length).toEqual(
-    13
-  );
+  expect(shuffled.filter((card) => card.rank == Rank.Joker).length).toEqual(2);
+  expect(shuffled.filter((card) => card.rank == Rank.Ace).length).toEqual(4);
+  expect(shuffled.filter((card) => card.suit == Suit.Heart).length).toEqual(13);
+  expect(shuffled.filter((card) => card.suit == Suit.Heart).length).toEqual(13);
+  expect(shuffled.filter((card) => card.suit == Suit.Heart).length).toEqual(13);
+  expect(shuffled.filter((card) => card.suit == Suit.Heart).length).toEqual(13);
 });

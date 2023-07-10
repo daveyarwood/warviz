@@ -28,34 +28,41 @@ export interface Card {
   suit: Suit;
 }
 
-const rankText = new Map([
-  [Rank.Two, "2"],
-  [Rank.Three, "3"],
-  [Rank.Four, "4"],
-  [Rank.Five, "5"],
-  [Rank.Six, "6"],
-  [Rank.Seven, "7"],
-  [Rank.Eight, "8"],
-  [Rank.Nine, "9"],
-  [Rank.Ten, "10"],
-  [Rank.Jack, "J"],
-  [Rank.Queen, "Q"],
-  [Rank.King, "K"],
-  [Rank.Ace, "A"],
+const suitUnicodeValue = new Map([
+  [Suit.Spade, 127137],
+  [Suit.Heart, 127153],
+  [Suit.Diamond, 127169],
+  [Suit.Club, 127185],
+  [Suit.Joker, 127183],
 ]);
 
-const suitCharacter = new Map([
-  [Suit.Heart, "♥"],
-  [Suit.Diamond, "♦"],
-  [Suit.Club, "♣"],
-  [Suit.Spade, "♠"],
+const rankUnicodeValue = new Map([
+  [Rank.Joker, 0],
+  [Rank.Ace, 0],
+  [Rank.Two, 1],
+  [Rank.Three, 2],
+  [Rank.Four, 3],
+  [Rank.Five, 4],
+  [Rank.Six, 5],
+  [Rank.Seven, 6],
+  [Rank.Eight, 7],
+  [Rank.Nine, 8],
+  [Rank.Ten, 9],
+  [Rank.Jack, 10],
+  // Queen is 12 because it turns out that there is a Cavalier/Knight rank in
+  // some countries! The value would be between Jack and Queen, i.e. 11.
+  [Rank.Queen, 12],
+  [Rank.King, 13],
 ]);
 
 export function cardToText(card: Card): string {
-  if (card.rank == Rank.Joker) return "Joker";
+  const suitValue = suitUnicodeValue.get(card.suit);
+  if (suitValue == undefined) throw new Error(`Unexpected suit: ${card.suit}`);
 
-  return ((rankText.get(card.rank) as string) +
-    suitCharacter.get(card.suit)) as string;
+  const rankValue = rankUnicodeValue.get(card.rank);
+  if (rankValue == undefined) throw new Error(`Unexpected rank: ${card.rank}`);
+
+  return String.fromCodePoint(suitValue + rankValue);
 }
 
 export type Deck = Card[];
