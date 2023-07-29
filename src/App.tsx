@@ -11,6 +11,7 @@ import {
   roundOutcome,
   roundOutcomeString,
 } from "./game";
+import confetti from "canvas-confetti";
 
 interface GameDisplayProps {
   status: GameStatus;
@@ -70,6 +71,15 @@ function War() {
       setTimer(setInterval(() => setGame(iterateGame(game)), playSpeedMs));
     }
   }, [autoadvance, game, playSpeedMs]);
+
+  useEffect(() => {
+    if (
+      game.status === GameStatus.Player1Won ||
+      game.status === GameStatus.Player2Won
+    ) {
+      confetti();
+    }
+  }, [game]);
 
   return (
     <div>

@@ -22,6 +22,5 @@ find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
   * e.g. make the higher card green and the lower card red
 * Save game state
 * Generative music
-* Confetti explosion when a player wins
 * Sunglasses emoji + trophy for the winner
 * Use the name of the player instead of "player 1" / "player 2"
