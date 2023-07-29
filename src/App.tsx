@@ -79,25 +79,27 @@ function War() {
       <br />
       {outcome != null ? `Round outcome: ${roundOutcomeString(outcome)}` : ""}
       <br />
-      <button onClick={() => setGame(iterateGame(game))}>Advance game</button>
+      <br />
+      {
+        autoadvance
+        ? <button onClick={() => setAutoadvance(false)} title="Pause">⏸</button>
+        : <button onClick={() => setAutoadvance(true)} title="Play">⏵</button>
+
+      }
       <button
         onClick={() => {
           if (timer) cancelTimer(timer);
           setGame(initialGame());
         }}
+        title="Reset game"
       >
-        Reset game
+        ⟳
       </button>
       <br />
       <br />
-      <label>
-        <input
-          type="checkbox"
-          checked={autoadvance}
-          onChange={() => setAutoadvance(!autoadvance)}
-        />
-        Advance every <strong>{playSpeedMs} ms</strong>
-      </label>
+      <button onClick={() => setGame(iterateGame(game))}>Manual Play</button>
+      <br />
+      <p>Advance every <strong>{playSpeedMs} ms</strong></p>
       <br />
       <div>
         <input

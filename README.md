@@ -20,7 +20,6 @@ find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
 * Make red cards red - could put them in a span
 * Draw attention to the higher card somehow
   * e.g. make the higher card green and the lower card red
-* Pause/play buttons
 * Save game state
 * Generative music
 * Confetti explosion when a player wins
