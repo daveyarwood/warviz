@@ -80,12 +80,15 @@ function War() {
       {outcome != null ? `Round outcome: ${roundOutcomeString(outcome)}` : ""}
       <br />
       <br />
-      {
-        autoadvance
-        ? <button onClick={() => setAutoadvance(false)} title="Pause">⏸</button>
-        : <button onClick={() => setAutoadvance(true)} title="Play">⏵</button>
-
-      }
+      {autoadvance ? (
+        <button onClick={() => setAutoadvance(false)} title="Pause">
+          ⏸
+        </button>
+      ) : (
+        <button onClick={() => setAutoadvance(true)} title="Play">
+          ⏵
+        </button>
+      )}
       <button
         onClick={() => {
           if (timer) cancelTimer(timer);
@@ -99,7 +102,9 @@ function War() {
       <br />
       <button onClick={() => setGame(iterateGame(game))}>Manual Play</button>
       <br />
-      <p>Advance every <strong>{playSpeedMs} ms</strong></p>
+      <p>
+        Advance every <strong>{playSpeedMs} ms</strong>
+      </p>
       <br />
       <div>
         <input
