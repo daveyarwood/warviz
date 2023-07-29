@@ -35,17 +35,12 @@ function PlayerDisplay(props: PlayerDisplayProps) {
   return (
     <div>
       <strong>{props.player.name}</strong> ({cardsInHand.length}):
-      {
-        cardsInPlay.length == 0
+      {cardsInPlay.length == 0
         ? ""
-        : " 🫴" + cardsInPlay.map(cardToText).join("")
-      }
+        : " 🫴" + cardsInPlay.map(cardToText).join("")}
     </div>
   );
 }
-
-// TODO: Make this a slider
-const AUTOADVANCE_MS = 100;
 
 type Timer = ReturnType<typeof setInterval>;
 
@@ -59,17 +54,22 @@ function War() {
   const [game, setGame] = useState(initialGame());
   const [timer, setTimer] = useState<Timer | null>(null);
   const [autoadvance, setAutoadvance] = useState(true);
+  const [playSpeedMs, setPlaySpeedMs] = useState(100);
+
+  function cancelTimer(timer: Timer) {
+    clearInterval(timer);
+    setTimer(null);
+  }
 
   const outcome = anyCardsInPlay(game) ? roundOutcome(game) : null;
 
   useEffect(() => {
     if (!autoadvance && timer) {
-      clearInterval(timer);
-      setTimer(null);
+      cancelTimer(timer);
     } else if (autoadvance && !timer) {
-      setTimer(setInterval(() => setGame(iterateGame(game)), AUTOADVANCE_MS));
+      setTimer(setInterval(() => setGame(iterateGame(game)), playSpeedMs));
     }
-  }, [autoadvance, game]);
+  }, [autoadvance, game, playSpeedMs]);
 
   return (
     <div>
@@ -80,13 +80,15 @@ function War() {
       {outcome != null ? `Round outcome: ${roundOutcomeString(outcome)}` : ""}
       <br />
       <button onClick={() => setGame(iterateGame(game))}>Advance game</button>
-      <button onClick={() =>
-        {
-          if (timer) clearInterval(timer);
-          setTimer(null);
+      <button
+        onClick={() => {
+          if (timer) cancelTimer(timer);
           setGame(initialGame());
-        }
-      }>Reset game</button>
+        }}
+      >
+        Reset game
+      </button>
+      <br />
       <br />
       <label>
         <input
@@ -94,8 +96,26 @@ function War() {
           checked={autoadvance}
           onChange={() => setAutoadvance(!autoadvance)}
         />
-        Play automatically
+        Advance every <strong>{playSpeedMs} ms</strong>
       </label>
+      <br />
+      <div>
+        <input
+          type="range"
+          id="speed"
+          name="speed"
+          disabled={!autoadvance}
+          min="50"
+          max="1000"
+          step="50"
+          onChange={(event) => {
+            const newSpeed = parseInt(event.target.value);
+            setPlaySpeedMs(newSpeed);
+            // A new timer will be created on the next render.
+            cancelTimer(timer!!);
+          }}
+        />
+      </div>
     </div>
   );
 }

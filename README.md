@@ -16,7 +16,6 @@ find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
 
 ## TODO
 
-* Speed slider
 * Nicer display of players' cards - bigger font, table
 * Make red cards red - could put them in a span
 * Draw attention to the higher card somehow
