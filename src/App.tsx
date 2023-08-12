@@ -37,7 +37,7 @@ function cardToSpan(card: Card) {
   const cardText = cardToText(card);
 
   return (
-    <span style={{ color: cardColor }} key={cardText}>
+    <span style={{ color: cardColor }} key={crypto.randomUUID()}>
       {cardText}
     </span>
   );
