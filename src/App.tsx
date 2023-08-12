@@ -48,19 +48,32 @@ function PlayerDisplay(props: PlayerDisplayProps) {
   const cardsInPlay = props.player.cardsInPlay;
   const cardsInHand = props.player.cardsInHand;
 
-  // TODO: Make this an actual table so that things line up
+  // TODO:
+  // * Add .winning-card class to the winning card
+  // * Move 😎🏆 to cards in play cell
   return (
-    <div>
-      <strong>{props.player.name}</strong> ({cardsInHand.length}):
-      {props.playerWon ? (
-        " 😎🏆"
-      ) : cardsInPlay.length == 0 ? (
-        ""
-      ) : (
-        <span> 🫴{cardsInPlay.map(cardToSpan)}</span>
-      )}
-      {props.playerWonRound ? " ✅" : ""}
-    </div>
+    <tr>
+      <td className="player-name">
+        <strong>{props.player.name}</strong>
+      </td>
+      <td width="10px">({cardsInHand.length}):</td>
+      <td className="cards-in-play">
+        {cardsInPlay.length == 0 ? (
+          ""
+        ) : (
+          <span> 🫴{cardsInPlay.map(cardToSpan)}</span>
+        )}
+      </td>
+      <td width="10px">
+        {props.playerWon ? (
+          " 😎🏆"
+        ) : props.playerWonRound ? (
+          <span className="player-won-round">✅</span>
+        ) : (
+          ""
+        )}
+      </td>
+    </tr>
   );
 }
 
@@ -106,16 +119,20 @@ function War() {
   return (
     <div>
       <GameDisplay game={game} />
-      <PlayerDisplay
-        player={game.player1}
-        playerWon={game.status == GameStatus.Player1Won}
-        playerWonRound={outcome == RoundOutcome.Player1Won}
-      />
-      <PlayerDisplay
-        player={game.player2}
-        playerWon={game.status == GameStatus.Player2Won}
-        playerWonRound={outcome == RoundOutcome.Player2Won}
-      />
+      <table className="player-displays">
+        <tbody>
+          <PlayerDisplay
+            player={game.player1}
+            playerWon={game.status == GameStatus.Player1Won}
+            playerWonRound={outcome == RoundOutcome.Player1Won}
+          />
+          <PlayerDisplay
+            player={game.player2}
+            playerWon={game.status == GameStatus.Player2Won}
+            playerWonRound={outcome == RoundOutcome.Player2Won}
+          />
+        </tbody>
+      </table>
       <br />
       {outcomeString || ""}
       <br />

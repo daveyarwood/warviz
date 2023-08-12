@@ -35,3 +35,28 @@
 .read-the-docs {
   color: #888;
 }
+
+.player-displays {
+  /* font-size: 2em; */
+  line-height: 1.5em;
+  width: 500px;
+}
+
+.player-name {
+  width: 10px;
+  text-align: right;
+}
+
+.cards-in-play {
+  padding-right: 10px;
+  text-align: left;
+}
+
+.winning-card::after {
+  vertical-align: super;
+  position: relative;
+  right: 18px;
+  top: -10px;
+  font-size: 0.5em;
+  content: " ✅";
+}
