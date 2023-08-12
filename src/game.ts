@@ -13,14 +13,14 @@ export enum GameStatus {
   Player2Won,
 }
 
-export function gameStatusString(status: GameStatus): string {
-  switch (status) {
+export function gameStatusString(game: Game): string {
+  switch (game.status) {
     case GameStatus.StillPlaying:
       return "still playing";
     case GameStatus.Player1Won:
-      return "player 1 won";
+      return `${game.player1.name} won!`;
     case GameStatus.Player2Won:
-      return "player 2 won";
+      return `${game.player2.name} won!`;
   }
 }
 

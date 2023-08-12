@@ -14,7 +14,7 @@ import {
 import confetti from "canvas-confetti";
 
 interface GameDisplayProps {
-  status: GameStatus;
+  game: Game;
 }
 
 interface PlayerDisplayProps {
@@ -25,7 +25,7 @@ interface PlayerDisplayProps {
 function GameDisplay(props: GameDisplayProps) {
   return (
     <div>
-      <strong>Game status:</strong> {gameStatusString(props.status)}
+      <strong>Game status:</strong> {gameStatusString(props.game)}
     </div>
   );
 }
@@ -86,7 +86,7 @@ function War() {
 
   return (
     <div>
-      <GameDisplay status={game.status} />
+      <GameDisplay game={game} />
       <PlayerDisplay
         player={game.player1}
         playerWon={game.status == GameStatus.Player1Won}
