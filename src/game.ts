@@ -80,18 +80,16 @@ export function roundOutcome(game: Game): RoundOutcome {
   return RoundOutcome.Player2Won;
 }
 
-export function roundOutcomeString(outcome: RoundOutcome): string {
-  switch (outcome) {
+export function roundOutcomeString(game: Game): string {
+  switch (roundOutcome(game)) {
     case RoundOutcome.War:
       return "⚔️WAR!⚔️";
     case RoundOutcome.Player1Won:
-      return "Player 1 wins";
+      return `${game.player1.name} wins the round!`;
     case RoundOutcome.Player2Won:
-      return "Player 2 wins";
+      return `${game.player2.name} wins the round!`;
   }
 }
-
-[];
 
 function drawCard(player: Player): Player {
   const card: Card | undefined = player.cardsInHand.shift();

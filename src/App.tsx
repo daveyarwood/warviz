@@ -81,7 +81,7 @@ function War() {
     setTimer(null);
   }
 
-  const outcome = anyCardsInPlay(game) ? roundOutcome(game) : null;
+  const outcomeString = anyCardsInPlay(game) ? roundOutcomeString(game) : null;
 
   useEffect(() => {
     if (!autoadvance && timer) {
@@ -112,7 +112,7 @@ function War() {
         playerWon={game.status == GameStatus.Player2Won}
       />
       <br />
-      {outcome != null ? `Round outcome: ${roundOutcomeString(outcome)}` : ""}
+      {outcomeString || ""}
       <br />
       <br />
       {autoadvance ? (
