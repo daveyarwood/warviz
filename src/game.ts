@@ -41,10 +41,18 @@ function initialPlayer(name: string, initialHand: Card[]): Player {
 export function initialGame(): Game {
   const deck = shuffle(standardDeck());
 
+  const queryParams = new URLSearchParams(window.location.search);
+
   return {
     status: GameStatus.StillPlaying,
-    player1: initialPlayer("Dave", deck.slice(0, 27)),
-    player2: initialPlayer("Mah", deck.slice(27, 54)),
+    player1: initialPlayer(
+      queryParams.get("player1") || "Player 1",
+      deck.slice(0, 27)
+    ),
+    player2: initialPlayer(
+      queryParams.get("player2") || "Player 2",
+      deck.slice(27, 54)
+    ),
   };
 }
 
