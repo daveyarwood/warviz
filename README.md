@@ -17,7 +17,6 @@ find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
 ## TODO
 
 * Nicer display of players' cards - bigger font, table
-* Make red cards red - could put them in a span
 * Draw attention to the higher card somehow
   * e.g. make the higher card green and the lower card red
 * Save game state

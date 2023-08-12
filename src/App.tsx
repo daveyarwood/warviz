@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { cardToText } from "./deck";
+import { cardToText, Suit } from "./deck";
 import { Game } from "./game";
+import { Card } from "./deck";
 import {
   gameStatusString,
   initialGame,
@@ -30,6 +31,19 @@ function GameDisplay(props: GameDisplayProps) {
   );
 }
 
+function cardToSpan(card: Card) {
+  const cardColor =
+    card.suit == Suit.Heart || card.suit == Suit.Diamond ? "red" : "black";
+
+  const cardText = cardToText(card);
+
+  return (
+    <span style={{ color: cardColor }} key={cardText}>
+      {cardText}
+    </span>
+  );
+}
+
 function PlayerDisplay(props: PlayerDisplayProps) {
   const cardsInPlay = props.player.cardsInPlay;
   const cardsInHand = props.player.cardsInHand;
@@ -37,11 +51,13 @@ function PlayerDisplay(props: PlayerDisplayProps) {
   return (
     <div>
       <strong>{props.player.name}</strong> ({cardsInHand.length}):
-      {props.playerWon
-        ? " 😎🏆"
-        : cardsInPlay.length == 0
-        ? ""
-        : " 🫴" + cardsInPlay.map(cardToText).join("")}
+      {props.playerWon ? (
+        " 😎🏆"
+      ) : cardsInPlay.length == 0 ? (
+        ""
+      ) : (
+        <span> 🫴{cardsInPlay.map(cardToSpan)}</span>
+      )}
     </div>
   );
 }
