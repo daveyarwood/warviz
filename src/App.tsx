@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { cardToText, Suit } from "./deck";
-import { Game } from "./game";
+import { Game, roundOutcome, RoundOutcome } from "./game";
 import { Card } from "./deck";
 import {
   gameStatusString,
@@ -20,6 +20,7 @@ interface GameDisplayProps {
 interface PlayerDisplayProps {
   player: Player;
   playerWon: Boolean;
+  playerWonRound: Boolean;
 }
 
 function GameDisplay(props: GameDisplayProps) {
@@ -47,6 +48,7 @@ function PlayerDisplay(props: PlayerDisplayProps) {
   const cardsInPlay = props.player.cardsInPlay;
   const cardsInHand = props.player.cardsInHand;
 
+  // TODO: Make this an actual table so that things line up
   return (
     <div>
       <strong>{props.player.name}</strong> ({cardsInHand.length}):
@@ -57,6 +59,7 @@ function PlayerDisplay(props: PlayerDisplayProps) {
       ) : (
         <span> 🫴{cardsInPlay.map(cardToSpan)}</span>
       )}
+      {props.playerWonRound ? " ✅" : ""}
     </div>
   );
 }
@@ -80,6 +83,7 @@ function War() {
     setTimer(null);
   }
 
+  const outcome = anyCardsInPlay(game) ? roundOutcome(game) : null;
   const outcomeString = anyCardsInPlay(game) ? roundOutcomeString(game) : null;
 
   useEffect(() => {
@@ -105,10 +109,12 @@ function War() {
       <PlayerDisplay
         player={game.player1}
         playerWon={game.status == GameStatus.Player1Won}
+        playerWonRound={outcome == RoundOutcome.Player1Won}
       />
       <PlayerDisplay
         player={game.player2}
         playerWon={game.status == GameStatus.Player2Won}
+        playerWonRound={outcome == RoundOutcome.Player2Won}
       />
       <br />
       {outcomeString || ""}
