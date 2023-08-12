@@ -9,7 +9,6 @@ import {
   iterateGame,
   GameStatus,
   Player,
-  roundOutcome,
   roundOutcomeString,
 } from "./game";
 import confetti from "canvas-confetti";
