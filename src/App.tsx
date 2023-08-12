@@ -19,6 +19,7 @@ interface GameDisplayProps {
 
 interface PlayerDisplayProps {
   player: Player;
+  playerWon: Boolean;
 }
 
 function GameDisplay(props: GameDisplayProps) {
@@ -36,7 +37,9 @@ function PlayerDisplay(props: PlayerDisplayProps) {
   return (
     <div>
       <strong>{props.player.name}</strong> ({cardsInHand.length}):
-      {cardsInPlay.length == 0
+      {props.playerWon
+        ? " 😎🏆"
+        : cardsInPlay.length == 0
         ? ""
         : " 🫴" + cardsInPlay.map(cardToText).join("")}
     </div>
@@ -84,8 +87,14 @@ function War() {
   return (
     <div>
       <GameDisplay status={game.status} />
-      <PlayerDisplay player={game.player1} />
-      <PlayerDisplay player={game.player2} />
+      <PlayerDisplay
+        player={game.player1}
+        playerWon={game.status == GameStatus.Player1Won}
+      />
+      <PlayerDisplay
+        player={game.player2}
+        playerWon={game.status == GameStatus.Player2Won}
+      />
       <br />
       {outcome != null ? `Round outcome: ${roundOutcomeString(outcome)}` : ""}
       <br />
