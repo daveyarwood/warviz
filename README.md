@@ -20,3 +20,4 @@ find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
 * Draw attention to the higher card somehow
   * e.g. make the higher card green and the lower card red
 * Generative music
+* GitHub Pages / Netlify automatic build
