@@ -141,21 +141,24 @@ function War() {
         <img
           src="images/pause.png"
           className="control-button"
-          alt="Pause game"
+          alt="Pause button"
+          title="Pause game"
           onClick={() => setAutoadvance(false)}
         />
       ) : (
         <img
           src="images/play.png"
           className="control-button"
-          alt="Play game"
+          alt="Play button"
+          title="Play game"
           onClick={() => setAutoadvance(true)}
         />
       )}
       <img
         src="images/reset.png"
         className="control-button"
-        alt="Start a new game"
+        alt="Reset button"
+        title="Start a new game"
         onClick={() => {
           if (timer) cancelTimer(timer);
           setGame(initialGame());
