@@ -85,11 +85,34 @@ function anyCardsInPlay(game: Game): boolean {
   );
 }
 
+// We keep track of this on page load so that we can pause the game if the game
+// is being shared as a URL.
+var gameLoadedFromHash = false;
+
+// If there is an encoded game status in `location.hash`, decodes it and returns
+// the Game object.
+//
+// Otherwise, returns null.
+function loadGameFromHash() {
+  if (location.hash.length == 0) {
+    return null;
+  }
+
+  gameLoadedFromHash = true;
+
+  const gameHash = location.hash.slice(1);
+  const decoded = atob(gameHash);
+  return JSON.parse(decoded);
+}
+
 function War() {
-  const [game, setGame] = useState(initialGame());
+  const [game, setGame] = useState(loadGameFromHash() || initialGame());
   const [timer, setTimer] = useState<Timer | null>(null);
-  const [autoadvance, setAutoadvance] = useState(true);
+  const [autoadvance, setAutoadvance] = useState(!gameLoadedFromHash);
   const [playSpeedMs, setPlaySpeedMs] = useState(100);
+
+  const gameHash = btoa(JSON.stringify(game));
+  location.hash = `#${gameHash}`;
 
   function cancelTimer(timer: Timer) {
     clearInterval(timer);
@@ -98,6 +121,10 @@ function War() {
 
   const outcome = anyCardsInPlay(game) ? roundOutcome(game) : null;
   const outcomeString = anyCardsInPlay(game) ? roundOutcomeString(game) : null;
+
+  useEffect(() => {
+    console.log(location.hash.slice(1));
+  }, []);
 
   useEffect(() => {
     if (!autoadvance && timer) {
