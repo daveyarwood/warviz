@@ -68,3 +68,14 @@ button:focus-visible {
     background-color: #747bff;
   }
 }
+
+.control-button {
+  width: 30px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.control-button:hover {
+  filter: invert(48%) sepia(13%) saturate(2557%) hue-rotate(200deg) brightness(95%) contrast(80%);
+  transition: 0.25s;
+}
