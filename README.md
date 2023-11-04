@@ -21,3 +21,5 @@ find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
   * e.g. make the higher card green and the lower card red
 * Generative music
 * GitHub Pages / Netlify automatic build
+* Share button - use TinyURL (or similar) to generate a short URL and provide a
+  way for the user to copy it
