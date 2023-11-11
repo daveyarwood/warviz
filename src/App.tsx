@@ -123,10 +123,6 @@ function War() {
   const outcomeString = anyCardsInPlay(game) ? roundOutcomeString(game) : null;
 
   useEffect(() => {
-    console.log(location.hash.slice(1));
-  }, []);
-
-  useEffect(() => {
     if (!autoadvance && timer) {
       cancelTimer(timer);
     } else if (autoadvance && !timer) {
