@@ -48,8 +48,13 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+button {
+  background-color: #747bff;
+  transition: 0.25s;
+}
 button:hover {
-  border-color: #000;
+  background-color: #545cf2;
+  transition: 0.25s;
 }
 button:focus,
 button:focus-visible {
@@ -64,18 +69,10 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
-  button {
-    background-color: #747bff;
+}
+
+@media (prefers-color-scheme: dark) {
+  a:hover {
+    color: #747bff;
   }
-}
-
-.control-button {
-  width: 30px;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.control-button:hover {
-  filter: invert(48%) sepia(13%) saturate(2557%) hue-rotate(200deg) brightness(95%) contrast(80%);
-  transition: 0.25s;
 }

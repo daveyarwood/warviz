@@ -37,9 +37,12 @@
 }
 
 .player-displays {
-  /* font-size: 2em; */
   line-height: 1.5em;
   width: 500px;
+  color: #213547;
+  background-color: #fff;
+  border-radius: 30px;
+  padding: 10px;
 }
 
 .player-name {
@@ -59,4 +62,23 @@
   top: -10px;
   font-size: 0.5em;
   content: " ✅";
+}
+
+#control-buttons {
+  width: 100px;
+  background-color: #fff;
+  border-radius: 30px;
+  padding: 15px 10px 10px 10px;
+  margin: auto
+}
+
+.control-button {
+  width: 30px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.control-button:hover {
+  filter: invert(48%) sepia(13%) saturate(2557%) hue-rotate(200deg) brightness(95%) contrast(80%);
+  transition: 0.25s;
 }

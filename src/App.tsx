@@ -160,33 +160,35 @@ function War() {
       {outcomeString || ""}
       <br />
       <br />
-      {autoadvance ? (
+      <div id="control-buttons">
+        {autoadvance ? (
+          <img
+            src="images/pause.png"
+            className="control-button"
+            alt="Pause button"
+            title="Pause game"
+            onClick={() => setAutoadvance(false)}
+          />
+        ) : (
+          <img
+            src="images/play.png"
+            className="control-button"
+            alt="Play button"
+            title="Play game"
+            onClick={() => setAutoadvance(true)}
+          />
+        )}
         <img
-          src="images/pause.png"
+          src="images/reset.png"
           className="control-button"
-          alt="Pause button"
-          title="Pause game"
-          onClick={() => setAutoadvance(false)}
+          alt="Reset button"
+          title="Start a new game"
+          onClick={() => {
+            if (timer) cancelTimer(timer);
+            setGame(initialGame());
+          }}
         />
-      ) : (
-        <img
-          src="images/play.png"
-          className="control-button"
-          alt="Play button"
-          title="Play game"
-          onClick={() => setAutoadvance(true)}
-        />
-      )}
-      <img
-        src="images/reset.png"
-        className="control-button"
-        alt="Reset button"
-        title="Start a new game"
-        onClick={() => {
-          if (timer) cancelTimer(timer);
-          setGame(initialGame());
-        }}
-      />
+      </div>
       <br />
       <br />
       <button onClick={() => setGame(iterateGame(game))}>Manual Play</button>
