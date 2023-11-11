@@ -216,11 +216,28 @@ function War() {
   );
 }
 
+function copyURL() {
+  navigator.clipboard.writeText(window.location.href);
+  alert("Copied URL to clipboard");
+}
+
+function ShareButton() {
+  return (
+    <div id="top-menu">
+      <button id="share-button" onClick={copyURL}>
+        Share
+      </button>
+    </div>
+  );
+}
+
 function App() {
   return (
     <div className="App">
       <h1>War</h1>
       <War />
+      <br />
+      <ShareButton />
     </div>
   );
 }

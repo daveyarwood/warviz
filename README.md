@@ -16,7 +16,6 @@ find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
 
 ## TODO
 
-* Share button - copies URL to clipboard
 * GitHub Pages / Netlify automatic build
 * Allow inputting player names / enforce a limit
 * Generative music
