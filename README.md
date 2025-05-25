@@ -8,10 +8,16 @@ To serve the app locally and automatically recompile whenever code changes:
 yarn dev
 ```
 
+To run the tests once:
+
+```bash
+yarn test
+```
+
 To automatically run tests every time code changes:
 
 ```bash
-find . -type f -name '*.ts' | entr -r bash -c "npx vitest run"
+yarn test:watch
 ```
 
 ## TODO
