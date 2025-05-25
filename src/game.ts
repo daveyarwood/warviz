@@ -41,7 +41,9 @@ function initialPlayer(name: string, initialHand: Card[]): Player {
 export function initialGame(): Game {
   const deck = shuffle(standardDeck());
 
-  const queryParams = new URLSearchParams(window.location.search);
+  const queryParams = typeof window !== 'undefined' 
+    ? new URLSearchParams(window.location.search)
+    : new URLSearchParams();
 
   return {
     status: GameStatus.StillPlaying,
