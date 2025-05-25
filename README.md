@@ -23,7 +23,7 @@ yarn test:watch
 ## TODO
 
 * Allow inputting player names / enforce a limit
-* Generative music
+* [Generative music](./MUSIC_PLAN.md)
 * Nicer display of players' cards - bigger font, table
 * Draw attention to the higher card somehow
   * e.g. make the higher card green and the lower card red
