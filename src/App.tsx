@@ -206,8 +206,10 @@ function War() {
           min="50"
           max="1000"
           step="50"
+          value={1050 - playSpeedMs}
           onChange={(event) => {
-            const newSpeed = parseInt(event.target.value);
+            const sliderValue = parseInt(event.target.value);
+            const newSpeed = 1050 - sliderValue;
             setPlaySpeedMs(newSpeed);
             // A new timer will be created on the next render.
             cancelTimer(timer!!);
